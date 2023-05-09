@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Github, Chrome } from "lucide-react";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -79,6 +79,11 @@ const LoginModal: FC<LoginModalProps> = ({}) => {
     </div>
   );
 
+  const toggle = useCallback(() => {
+    loginModal.onClose();
+    registerModal.onOpen();
+  }, [loginModal, registerModal]);
+
   const footerContent = (
     <div className="flex flex-col gap-4">
       <Button
@@ -97,8 +102,11 @@ const LoginModal: FC<LoginModalProps> = ({}) => {
       </Button>
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex justify-center items-center gap-2">
-          <div>Não tem uma conta?</div>
-          <div className="text-neutral-800 cursor-pointer hover:underline font-semibold">
+          <div>Primeira vez no Airbnb?</div>
+          <div
+            onClick={toggle}
+            className="text-neutral-800 cursor-pointer hover:underline font-semibold"
+          >
             Cadastre-se
           </div>
         </div>

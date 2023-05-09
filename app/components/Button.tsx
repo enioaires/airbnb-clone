@@ -12,7 +12,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-rose-500 border-rose-500 text-white",
-        outline: "bg-white border-black text-black",
+        outline: "bg-white border-black text-black hover:bg-gray-50",
       },
       size: {
         default: "py-3 text-md font-semibold border-2",

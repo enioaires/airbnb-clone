@@ -1,5 +1,5 @@
 "use client";
-import { FC, useState } from "react";
+import { FC, useCallback, useState } from "react";
 import { Github, Chrome } from "lucide-react";
 import axios from "axios";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
@@ -11,11 +11,13 @@ import Input from "../inputs/Input";
 import { toast } from "react-hot-toast";
 import { Button } from "../Button";
 import { signIn } from "next-auth/react";
+import useLoginModal from "@/app/hooks/useLoginModal";
 
 interface RegisterModalProps {}
 
 const RegisterModal: FC<RegisterModalProps> = ({}) => {
   const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -35,7 +37,9 @@ const RegisterModal: FC<RegisterModalProps> = ({}) => {
     try {
       await axios.post("/api/auth/register", data);
       setIsLoading(false);
+      toast.success("Conta criada com sucesso!");
       registerModal.onClose();
+      loginModal.onOpen();
     } catch (error) {
       toast.error("Algo deu errado, tente novamente mais tarde.");
     } finally {
@@ -77,6 +81,11 @@ const RegisterModal: FC<RegisterModalProps> = ({}) => {
     </div>
   );
 
+  const toggle = useCallback(() => {
+    loginModal.onOpen();
+    registerModal.onClose();
+  }, [loginModal, registerModal]);
+
   const footerContent = (
     <div className="flex flex-col gap-4">
       <Button
@@ -96,7 +105,10 @@ const RegisterModal: FC<RegisterModalProps> = ({}) => {
       <div className="text-neutral-500 text-center mt-4 font-light">
         <div className="flex justify-center items-center gap-2">
           <div>Já tem uma conta?</div>
-          <div className="text-neutral-800 cursor-pointer hover:underline font-semibold">
+          <div
+            onClick={toggle}
+            className="text-neutral-800 cursor-pointer hover:underline font-semibold"
+          >
             Login
           </div>
         </div>
